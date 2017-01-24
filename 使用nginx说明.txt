@@ -1,0 +1,89 @@
+
+启动:
+/sbin/nginx -c  conf/nginx.conf
+参数"-c"指定了配置文件的路径，如果不加"-c"参数，Nginx会默认加载其安装目录的conf子目录中的nginx.conf文件
+
+nginx/nginx-1.11.8/myubuntu/sbin# ps -e | grep nginx
+29031 ?        00:00:00 nginx
+29032 ?        00:00:00 nginx
+
+
+nginx/nginx-1.11.8/myubuntu/sbin# netstat -tan | grep 80
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN     
+
+检查配置文件:
+sbin/nginx –t -c conf/nginx.conf
+参数"-t"检查Nginx配置文件是否正确, 如果配置文件不正确，屏幕将会提示配置文件的第几行出错
+
+平滑重启：
+nginx/nginx-1.11.8/myubuntu/sbin# kill -hub `cat ../logs/nginx.pid` 
+当Nginx接收到HUP信号时，它会尝试先解析配置文件，如果成功，就应用新的配置文件（例如，重新打开日志文件或监听的套接字）
+之后，Nginx运行新的工作进程并从容关闭旧的工作进程。
+通知工作进程关闭监听套接字，但是继续为当前连接的客户提供服务。
+所有客户端的服务完成后，旧的工作进程被关闭。
+如果新的配置文件应用失败，Nginx将继续使用旧的配置进行工作。
+
+平缓升级:
+blog.sina.com.cn/s/blog_6e1587ae01017pxq.html
+kill –USR2 旧版本的nginx主进程号
+kill -WINCH 旧版本的Nginx主进程号
+
+关闭:
+从容停止Nginx
+nginx/nginx-1.11.8/myubuntu/sbin# kill -quit `cat ../logs/nginx.pid` 
+快速停止Nginx
+nginx/nginx-1.11.8/myubuntu/sbin# kill -term `cat ../logs/nginx.pid` 
+nginx/nginx-1.11.8/myubuntu/sbin# kill -int `cat ../logs/nginx.pid` 
+
+强制停止所有Nginx进程
+nginx/nginx-1.11.8/myubuntu/sbin# pkill –9 nginx
+
+
+Nginx支持以下几种信号类型：
+·TERM，INT快速关闭；
+·QUIT从容关闭；
+·HUP平滑重启，重新加载配置文件；
+·USR1重新打开日志文件，在切割日志时用途较大；
+·USR2平滑升级可执行程序；
+·WINCH从容关闭工作进程
+
+
+检查:
+浏览器地址栏输入 localhost   出现"Welcome to nginx!" 
+nginx启动后 会绑定80端口(需要root权限)
+
+
+帮助:
+nginx/nginx-1.11.8/myubuntu/sbin# ./nginx -h
+nginx version: nginx/1.11.8  版本号
+Usage: nginx [-?hvVtTq] [-s signal] [-c filename] [-p prefix] [-g directives]
+
+Options:
+  -?,-h         : this help
+  -v            : show version and exit
+  -V            : show version and configure options then exit
+  -t            : test configuration and exit
+  -T            : test configuration, dump it and exit
+  -q            : suppress non-error messages during configuration testing
+  -s signal     : send signal to a master process: stop, quit, reopen, reload
+  -p prefix     : set prefix path (default: /home/hanlon/Cat6/nginx/nginx-1.11.8/myubuntu/)
+  -c filename   : set configuration file (default: conf/nginx.conf)  默认配置文件 在 prefix 目录下的 conf/nginx.conf
+  -g directives : set global directives out of configuration file
+
+
+
+目录树:
+.
+├── nginx-1.11.8
+├── nginx-rtmp-module
+├── openssl-1.0.2j
+├── pcre-8.40
+├── tar
+├── zlib-1.2.11
+└── 使用nginx说明.txt
+
+依赖库:
+zlib  openssl pcre 
+
+
+

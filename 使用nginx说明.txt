@@ -11,6 +11,12 @@ nginx/nginx-1.11.8/myubuntu/sbin# ps -e | grep nginx
 nginx/nginx-1.11.8/myubuntu/sbin# netstat -tanp | grep 80
 tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      29220/nginx   
 
+
+# netstat -tnlp | grep nginx
+tcp        0      0 0.0.0.0:1935            0.0.0.0:*               LISTEN      32515/nginx (配置rtmp模块 )    
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      32515/nginx 
+
+
 检查配置文件:
 sbin/nginx –t -c conf/nginx.conf
 参数"-t"检查Nginx配置文件是否正确, 如果配置文件不正确，屏幕将会提示配置文件的第几行出错
@@ -29,14 +35,13 @@ kill –USR2 旧版本的nginx主进程号
 kill -WINCH 旧版本的Nginx主进程号
 
 关闭:
-从容停止Nginx
+a.从容停止Nginx
 nginx/nginx-1.11.8/myubuntu/sbin# kill -quit `cat ../logs/nginx.pid` 
-快速停止Nginx
+b.快速停止Nginx
 nginx/nginx-1.11.8/myubuntu/sbin# kill -term `cat ../logs/nginx.pid` 
 nginx/nginx-1.11.8/myubuntu/sbin# kill -int `cat ../logs/nginx.pid` 
-
-强制停止所有Nginx进程
-nginx/nginx-1.11.8/myubuntu/sbin# pkill –9 nginx
+c.强制停止所有Nginx进程
+nginx/nginx-1.11.8/myubuntu/sbin# pkill –9 nginx (注意不是 pkill -s 9 nginx)
 
 
 Nginx支持以下几种信号类型：
@@ -47,6 +52,27 @@ Nginx支持以下几种信号类型：
 ·USR2平滑升级可执行程序；
 ·WINCH从容关闭工作进程
 
+添加rtmp支持
+conf/nginx.conf
+#针对 rtmp://
+rtmp {
+   server{
+       listen 1935;
+       application rtmpapp {
+               live on;
+       }
+       application hls {
+               live on;
+               hls on;
+               hls_path /tmp/hls;
+       }
+  }
+}
+
+ffmpeg推送rtmp
+./ffmpeg -re -i "/home/hanlon/Cat6/1080p60fps.mp4" -vcodec copy -acodec copy -f flv rtmp://192.168.1.103/rtmpapp/test
+VLC接收rtmp
+网络流地址 rtmp://192.168.1.103/rtmpapp/test
 
 检查:
 浏览器地址栏输入 localhost   出现"Welcome to nginx!" 

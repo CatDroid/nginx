@@ -139,4 +139,9 @@ Options:
 zlib  openssl pcre 
 
 
+rtmp使用说明	
+nginx-rtmp-module说明: https://github.com/arut/nginx-rtmp-module/wiki/Directives
+协议说明: http://mingyangshang.github.io/2016/03/06/RTMP协议/
+
+
 

@@ -1,5 +1,32 @@
 
-启动:
+
+确认使用的配置是否自己想要的位置
+./nginx -t -c ../conf/nginx.conf
+nginx: the configuration file /home/hhl/OpenSource/nginx/nginx-1.11.8/myubuntu/../conf/nginx.conf syntax is ok
+nginx: configuration file /home/hhl/OpenSource/nginx/nginx-1.11.8/myubuntu/../conf/nginx.conf test is successful
+注意 nginx使用的当前目录已经是相对于安装的目录  也就是  
+/home/hhl/OpenSource/nginx/nginx-1.11.8/myubuntu/
+所以-c后面使用 ../ 是相对于安装目录
+正确应该是./nginx -t -c conf/nginx.conf
+
+
+
+我的安装路径和目录是
+root@hhl-VirtualBox:~/OpenSource/nginx/nginx-1.11.8/myubuntu# tree -L 1
+.
+├── client_body_temp
+├── conf
+├── fastcgi_temp
+├── html
+├── logs
+├── proxy_temp
+├── sbin
+├── scgi_temp
+└── uwsgi_temp
+
+
+
+启动: (先用 netstat -tnlp | grep nginx 检查是否1935 rtmp是否启动成功 )
 /sbin/nginx -c  conf/nginx.conf
 参数"-c"指定了配置文件的路径，如果不加"-c"参数，Nginx会默认加载其安装目录的conf子目录中的nginx.conf文件
 

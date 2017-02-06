@@ -18,7 +18,8 @@ INSTALL_DIR=$(pwd)/myubuntu
 		--with-openssl=../openssl-1.0.2j \
 		--with-pcre=../pcre-8.40 \
 		--with-zlib=../zlib-1.2.11 \
-		--add-module=../nginx-rtmp-module
+		--add-module=../nginx-rtmp-module \
+		| tee configure.txt
 
 
 
